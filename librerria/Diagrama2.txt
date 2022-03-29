@@ -1,0 +1,332 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema libreria
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `libreria` ;
+
+-- -----------------------------------------------------
+-- Schema libreria
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `libreria` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `libreria` ;
+
+-- -----------------------------------------------------
+-- Table `libreria`.`categoria`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`categoria` (
+  `idCategoria` INT NOT NULL AUTO_INCREMENT,
+  `Categoria` CHAR(20) NOT NULL,
+  PRIMARY KEY (`Categoria`),
+  UNIQUE INDEX `idCategoria_UNIQUE` (`idCategoria` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`cliente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`cliente` (
+  `idCliente` INT NOT NULL AUTO_INCREMENT,
+  `CodigoCliente` CHAR(8) NOT NULL,
+  `NombreCliente` VARCHAR(45) NOT NULL,
+  `ApellidoCliente` VARCHAR(45) NOT NULL,
+  `Edad` INT NOT NULL,
+  `Direccion` VARCHAR(100) NOT NULL,
+  `Telefono` VARCHAR(15) NOT NULL,
+  PRIMARY KEY (`CodigoCliente`),
+  UNIQUE INDEX `idCliente_UNIQUE` (`idCliente` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`escritor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`escritor` (
+  `idEscritor` INT NOT NULL AUTO_INCREMENT,
+  `Codigo_Escritor` CHAR(20) NOT NULL,
+  `Nombre_Escritor` VARCHAR(45) NOT NULL,
+  `Apellido_Escritor` VARCHAR(45) NOT NULL,
+  `Pais_Escritor` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`Codigo_Escritor`),
+  UNIQUE INDEX `idEscritor_UNIQUE` (`idEscritor` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`generoliterario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`generoliterario` (
+  `idGeneroLiterario` INT NOT NULL AUTO_INCREMENT,
+  `Genero_Literario` CHAR(20) NOT NULL,
+  PRIMARY KEY (`Genero_Literario`),
+  UNIQUE INDEX `idGeneroLiterario_UNIQUE` (`idGeneroLiterario` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`proveedor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`proveedor` (
+  `Id_ProveedorEditorial` INT NOT NULL AUTO_INCREMENT,
+  `CodigoEditorial` CHAR(8) NOT NULL,
+  `Nombre_Editorial` VARCHAR(45) NOT NULL,
+  `Direccion_Editorial` VARCHAR(100) NOT NULL,
+  `TelefonoEditorial` VARCHAR(15) NOT NULL,
+  PRIMARY KEY (`CodigoEditorial`),
+  UNIQUE INDEX `Id_ProveedorEditorial_UNIQUE` (`Id_ProveedorEditorial` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`subgenero_literario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`subgenero_literario` (
+  `idSubgenero_Literario` INT NOT NULL AUTO_INCREMENT,
+  `Subgenero` CHAR(20) NOT NULL,
+  PRIMARY KEY (`Subgenero`),
+  UNIQUE INDEX `idSubgenero_Literario_UNIQUE` (`idSubgenero_Literario` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`libro`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`libro` (
+  `idLibro` INT NOT NULL AUTO_INCREMENT,
+  `Codigo_Libro` CHAR(8) NOT NULL,
+  `CodigoEditorial` CHAR(8) NOT NULL,
+  `Titulo` VARCHAR(100) NOT NULL,
+  `Codigo_Escritor` CHAR(8) NOT NULL,
+  `Categoria` CHAR(20) NOT NULL,
+  `Genero_Literario` CHAR(20) NOT NULL,
+  `Subgenero` CHAR(20) NOT NULL,
+  PRIMARY KEY (`Codigo_Libro`),
+  UNIQUE INDEX `idLibro_UNIQUE` (`idLibro` ASC) VISIBLE,
+  INDEX `fk_libro_generoliterario1_idx` (`Genero_Literario` ASC) VISIBLE,
+  INDEX `fk_libro_categoria1_idx` (`Categoria` ASC) VISIBLE,
+  INDEX `fk_libro_proveedor1_idx` (`CodigoEditorial` ASC) VISIBLE,
+  INDEX `fk_libro_escritor1_idx` (`Codigo_Escritor` ASC) VISIBLE,
+  INDEX `fk_libro_subgenero_literario1_idx` (`Subgenero` ASC) VISIBLE,
+  CONSTRAINT `fk_libro_categoria1`
+    FOREIGN KEY (`Categoria`)
+    REFERENCES `libreria`.`categoria` (`Categoria`),
+  CONSTRAINT `fk_libro_escritor1`
+    FOREIGN KEY (`Codigo_Escritor`)
+    REFERENCES `libreria`.`escritor` (`Codigo_Escritor`),
+  CONSTRAINT `fk_libro_generoliterario1`
+    FOREIGN KEY (`Genero_Literario`)
+    REFERENCES `libreria`.`generoliterario` (`Genero_Literario`),
+  CONSTRAINT `fk_libro_proveedor1`
+    FOREIGN KEY (`CodigoEditorial`)
+    REFERENCES `libreria`.`proveedor` (`CodigoEditorial`),
+  CONSTRAINT `fk_libro_subgenero_literario1`
+    FOREIGN KEY (`Subgenero`)
+    REFERENCES `libreria`.`subgenero_literario` (`Subgenero`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`formadepago`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`formadepago` (
+  `idFormaDePago` INT NOT NULL AUTO_INCREMENT,
+  `Pago` VARCHAR(15) NOT NULL,
+  PRIMARY KEY (`idFormaDePago`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`compras`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`compras` (
+  `idCompras` INT NOT NULL AUTO_INCREMENT,
+  `Codigo_Libro` CHAR(8) NOT NULL,
+  `CodigoEditorial` CHAR(8) NOT NULL,
+  `Fecha_Compra` DATE NOT NULL,
+  `IdFormadePago` INT NOT NULL,
+  `Cantidad_Libros` INT NOT NULL,
+  `Precio_Unitario` DOUBLE NOT NULL,
+  PRIMARY KEY (`idCompras`),
+  INDEX `fk_compras_libro1_idx` (`Codigo_Libro` ASC) VISIBLE,
+  INDEX `fk_compras_proveedor1_idx` (`CodigoEditorial` ASC) VISIBLE,
+  INDEX `fk_compras_formadepago1_idx` (`IdFormadePago` ASC) VISIBLE,
+  CONSTRAINT `fk_compras_libro1`
+    FOREIGN KEY (`Codigo_Libro`)
+    REFERENCES `libreria`.`libro` (`Codigo_Libro`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_compras_proveedor1`
+    FOREIGN KEY (`CodigoEditorial`)
+    REFERENCES `libreria`.`proveedor` (`CodigoEditorial`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_compras_formadepago1`
+    FOREIGN KEY (`IdFormadePago`)
+    REFERENCES `libreria`.`formadepago` (`idFormaDePago`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`datos_libro`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`datos_libro` (
+  `idDatos_Libro` INT NOT NULL AUTO_INCREMENT,
+  `Codigo_Libro` CHAR(8) NOT NULL,
+  `Reseña` VARCHAR(750) NOT NULL,
+  `Precio` DECIMAL(3,0) NOT NULL,
+  `Cantidad` INT NOT NULL,
+  `Disponibilidad` VARCHAR(45) NOT NULL,
+  `Año_Publicacion` VARCHAR(12) NOT NULL,
+  PRIMARY KEY (`idDatos_Libro`),
+  UNIQUE INDEX `idDatos_Libro_UNIQUE` (`idDatos_Libro` ASC) VISIBLE,
+  INDEX `fk_datos_libro_libro1_idx` (`Codigo_Libro` ASC) VISIBLE,
+  CONSTRAINT `fk_datos_libro_libro1`
+    FOREIGN KEY (`Codigo_Libro`)
+    REFERENCES `libreria`.`libro` (`Codigo_Libro`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`datosescritor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`datosescritor` (
+  `idDatosEscritor` INT NOT NULL AUTO_INCREMENT,
+  `Codigo_Escritor` CHAR(8) NOT NULL,
+  `Fecha_Nacimiento` DATE NOT NULL,
+  `Lugar_Nacimiento` VARCHAR(45) NOT NULL,
+  `Fecha_Deceso` VARCHAR(45) NOT NULL,
+  `Lugar_Deceso` VARCHAR(45) NOT NULL,
+  `Biografia` VARCHAR(500) NULL DEFAULT NULL,
+  PRIMARY KEY (`idDatosEscritor`),
+  INDEX `fk_datosescritor_escritor1_idx` (`Codigo_Escritor` ASC) VISIBLE,
+  CONSTRAINT `fk_datosescritor_escritor1`
+    FOREIGN KEY (`Codigo_Escritor`)
+    REFERENCES `libreria`.`escritor` (`Codigo_Escritor`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`estadolibros`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`estadolibros` (
+  `idEstadoLibros` INT NOT NULL AUTO_INCREMENT,
+  `Codigo_Libro` CHAR(8) NOT NULL,
+  `Estado` VARCHAR(20) NOT NULL,
+  `Descripcion` VARCHAR(150) NOT NULL,
+  PRIMARY KEY (`idEstadoLibros`),
+  INDEX `fk_estadolibros_libro1_idx` (`Codigo_Libro` ASC) VISIBLE,
+  CONSTRAINT `fk_estadolibros_libro1`
+    FOREIGN KEY (`Codigo_Libro`)
+    REFERENCES `libreria`.`libro` (`Codigo_Libro`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`lector`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`lector` (
+  `idLector` INT NOT NULL AUTO_INCREMENT,
+  `CodigoLector` CHAR(8) NOT NULL,
+  `Nombre_Lector` VARCHAR(25) NOT NULL,
+  `Apellido_Lector` VARCHAR(25) NOT NULL,
+  `Edad` INT NOT NULL,
+  `Direccion` VARCHAR(45) NOT NULL,
+  `Telefono` VARCHAR(15) NOT NULL,
+  PRIMARY KEY (`CodigoLector`),
+  UNIQUE INDEX `idLector_UNIQUE` (`idLector` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`prestamo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`prestamo` (
+  `idPrestamo` INT NOT NULL AUTO_INCREMENT,
+  `CodigoLector` CHAR(8) NOT NULL,
+  `Codigo_Libro` CHAR(8) NOT NULL,
+  `FechaPrestamo` DATE NOT NULL,
+  `FechaDevolucion` DATE NOT NULL,
+  `Devuelto` VARCHAR(2) NOT NULL,
+  PRIMARY KEY (`idPrestamo`),
+  INDEX `fk_prestamo_libro1_idx` (`Codigo_Libro` ASC) VISIBLE,
+  INDEX `fk_prestamo_lector1_idx` (`CodigoLector` ASC) VISIBLE,
+  CONSTRAINT `fk_prestamo_lector1`
+    FOREIGN KEY (`CodigoLector`)
+    REFERENCES `libreria`.`lector` (`CodigoLector`),
+  CONSTRAINT `fk_prestamo_libro1`
+    FOREIGN KEY (`Codigo_Libro`)
+    REFERENCES `libreria`.`libro` (`Codigo_Libro`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `libreria`.`venta`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `libreria`.`venta` (
+  `idVenta` INT NOT NULL AUTO_INCREMENT,
+  `Codigo_Libro` CHAR(8) NOT NULL,
+  `CodigoCliente` CHAR(8) NOT NULL,
+  `Fecha_Venta` DATE NOT NULL,
+  `IdFormadePago` INT NOT NULL,
+  `Cantidad_Libros` INT NOT NULL,
+  `Precio_Unitario` DOUBLE NOT NULL,
+  PRIMARY KEY (`idVenta`),
+  INDEX `fk_venta_libro_idx` (`Codigo_Libro` ASC) VISIBLE,
+  INDEX `fk_venta_cliente1_idx` (`CodigoCliente` ASC) VISIBLE,
+  INDEX `fk_venta_formadepago1_idx` (`IdFormadePago` ASC) VISIBLE,
+  CONSTRAINT `fk_venta_cliente1`
+    FOREIGN KEY (`CodigoCliente`)
+    REFERENCES `libreria`.`cliente` (`CodigoCliente`),
+  CONSTRAINT `fk_venta_formadepago1`
+    FOREIGN KEY (`IdFormadePago`)
+    REFERENCES `libreria`.`formadepago` (`idFormaDePago`),
+  CONSTRAINT `fk_venta_libro`
+    FOREIGN KEY (`Codigo_Libro`)
+    REFERENCES `libreria`.`libro` (`Codigo_Libro`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
